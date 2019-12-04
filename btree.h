@@ -26,7 +26,7 @@ class BTree {
 
             return false;
         }
-        void checkProperties(Node<T>* nodeBefore,Node<T>* nodeToLook){
+        void checkProperties(Node<T>* &nodeBefore,Node<T>* nodeToLook){
             if (nodeToLook->numberKeys > degree-1){
                 if (nodeBefore == nodeToLook){
                     nodeBefore = nullptr;
@@ -83,7 +83,56 @@ class BTree {
             }
         }
 
-        void insertDataAfterRoot(Node<T>* nodeToLook,Node<T>* nodeBefore,T data){
+    void checkPropertiesRoot(Node<T>* nodeToLook){
+            Node<T>* newRoot = new Node<T>(degree);
+            if (nodeToLook->numberKeys >degree-1){
+            vector<Node<T>*> nodesToUp;
+            if (isOdd()){
+                for (int i = 0; i < nodeToLook->numberKeys; ++i) {
+                    if (i%2 == 1){
+                        newRoot->insertData(nodeToLook->keys[i]);
+                    }else{
+                        Node<T>* oneElementNode = new Node<T>(degree);
+                        oneElementNode->insertData(nodeToLook->keys[i]);
+                        oneElementNode->insertChild(nodeToLook->childs[i]);
+                        if(i+1<nodeToLook->numberChilds){
+                            oneElementNode->insertChild(nodeToLook->childs[i+1]);
+                        }
+                        nodesToUp.push_back(oneElementNode);
+                    }
+                }
+            } else{
+                Node<T>* twoElementNode = new Node<T>(degree);
+                twoElementNode->insertData(nodeToLook->keys[0]);
+                twoElementNode->insertData(nodeToLook->keys[1]);
+                twoElementNode->insertChild(nodeToLook->childs[0]);
+                twoElementNode->insertChild(nodeToLook->childs[1]);
+                twoElementNode->insertChild(nodeToLook->childs[2]);
+                nodesToUp.push_back(twoElementNode);
+                for (int i = 2; i < nodeToLook->numberKeys; ++i) {
+                    if (i%2 == 0){
+                        newRoot->insertData(nodeToLook->keys[i]);
+                    }else{
+                        Node<T>* oneElementNode = new Node<T>(degree);
+                        oneElementNode->insertData(nodeToLook->keys[i]);
+                        oneElementNode->insertChild(nodeToLook->childs[i]);
+                        if(i+1<nodeToLook->numberChilds){
+                            oneElementNode->insertChild(nodeToLook->childs[i+1]);
+                        }
+                        nodesToUp.push_back(oneElementNode);
+                    }
+                }
+            }
+            for (auto nodes = nodesToUp.begin(); nodes != nodesToUp.end() ; ++nodes) {
+                newRoot->insertChild(*nodes);
+            }
+                delete(root);
+                root = newRoot;
+        }
+    }
+
+
+    void insertDataAfterRoot(Node<T>* nodeToLook,Node<T>* nodeBefore,T data){
             Node<T>* nodeBeforeThis = nodeToLook;
             if (nodeToLook->numberChilds>0){
                     if (data < nodeToLook->keys[0]){
@@ -103,10 +152,7 @@ class BTree {
             } else{
                 nodeToLook->insertData(data);
             }
-            if (control != 1){
                 checkProperties(nodeBefore,nodeToLook);
-            }
-            control++;
         }
 
 
@@ -128,7 +174,7 @@ class BTree {
             } else{
                 nodeToLook->insertData(data);
             }
-                checkProperties(nodeBefore,root);
+                checkPropertiesRoot(root);
             control++;
         }
 
@@ -136,9 +182,11 @@ class BTree {
             if(root == nullptr){
                 root = new Node<T>(degree);
                 root->insertData(data);
+                return true;
             } else{
                 control = 0;
                 insertDataAfterRoot(root,data);
+                return true;
             }
         }
 
@@ -148,7 +196,7 @@ class BTree {
         }
 
         void print() {
-            // TODO
+
         }
 
         ~BTree(){

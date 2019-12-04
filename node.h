@@ -60,6 +60,7 @@ class Node {
             numberChilds--;
             sort(childs.begin(),childs.end(),compare);
         }
+
         /**
          * An alternative is to create two different nodes (Internal and Leaf) that inherite from Node 
          * an implement this function
