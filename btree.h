@@ -23,7 +23,7 @@ class BTree {
         }
 
         bool search(T data) {
-
+            // Falta search
             return false;
         }
         void checkProperties(Node<T>* &nodeBefore,Node<T>* nodeToLook){
@@ -191,7 +191,7 @@ class BTree {
         }
 
         bool remove(int k) {
-
+            // Falta remove
             return true;
         }
 
@@ -200,7 +200,7 @@ class BTree {
         }
 
         ~BTree(){
-
+            // Falta destructor
         }
 };
 

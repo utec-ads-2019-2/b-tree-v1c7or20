@@ -20,6 +20,5 @@ int main(int argc, char *argv[]) {
     primero.insert(65);
     primero.insert(24);
 
-    system("pause");
     return EXIT_SUCCESS;
 }
